@@ -10,12 +10,18 @@ on:
 
 jobs:
   build-v8:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 180  # Construction may take a long time.
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Prepare Install Python
+      run: |
+        sudo add-apt-repository universe
+        sudo apt update
+        sudo apt install python2
 
     - name: Setup Python 2.7
       uses: actions/setup-python@v4
