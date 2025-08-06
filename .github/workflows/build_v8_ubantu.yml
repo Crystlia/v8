@@ -17,15 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Python 3.12
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-
     - name: Setup environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build clang pkg-config git
+        sudo apt-get install -y ninja-build clang pkg-config git python2
 
     - name: Configure depot_tools
       run: |
