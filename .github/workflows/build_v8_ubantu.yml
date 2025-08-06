@@ -17,10 +17,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup Python 2.7
+      uses: actions/setup-python@v4
+      with:
+        python-version: '2.7'
+
     - name: Setup environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build clang pkg-config git python2
+        sudo apt-get install -y ninja-build clang pkg-config git
 
     - name: Configure depot_tools
       run: |
