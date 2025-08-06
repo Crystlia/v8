@@ -1,0 +1,75 @@
+name: Build V8 for Node.js
+
+on:
+  workflow_dispatch:
+    inputs:
+      v8_version:
+        description: 'V8 version to build'
+        required: true
+        default: '8.4.371.23'
+
+jobs:
+  build-v8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180  # Construction may take a long time.
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python 3.6
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Setup environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build clang pkg-config git python3
+
+    - name: Configure depot_tools
+      run: |
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git   
+        echo "$GITHUB_WORKSPACE/depot_tools" >> $GITHUB_PATH
+
+    - name: Fetch V8 source
+      run: |
+        fetch v8
+        cd v8
+        git checkout refs/tags/${{ inputs.v8_version }}
+        gclient sync -D
+
+    - name: Configure build arguments
+      run: |
+        cd v8
+        ./tools/dev/v8gen.py x64.release -- \
+          v8_monolithic=true \
+          v8_use_external_startup_data=false \
+          v8_static_library=true \
+          v8_enable_disassembler=true \
+          v8_enable_object_print=true \
+          v8_enable_pointer_compression=false \
+          is_component_build=false \
+          is_debug=false
+        # Verify configuration
+        cat out.gn/x64.release/args.gn
+
+    - name: Build V8 monolith
+      run: |
+        cd v8
+        ninja -C out.gn/x64.release v8_monolith
+        # Verify the build product
+        ls -lh out.gn/x64.release/obj/libv8_monolith.a
+
+    - name: Archive build artifacts
+      run: |
+        cd v8
+        tar czvf v8-build.tar.gz \
+          out.gn/x64.release/obj/libv8_monolith.a \
+          include/
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: v8-${{ inputs.v8_version }}-build
+        path: v8/v8-build.tar.gz
