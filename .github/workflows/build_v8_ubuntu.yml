@@ -17,16 +17,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Prepare Install Python
+    - name: Install Python 2
       run: |
         sudo add-apt-repository universe
         sudo apt update
         sudo apt install python2
-
-    - name: Setup Python 2.7
-      uses: actions/setup-python@v4
-      with:
-        python-version: '2.7'
 
     - name: Setup environment
       run: |
