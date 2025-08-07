@@ -35,7 +35,6 @@ jobs:
     - name: Fetch V8 source
       run: |
         fetch v8
-        cd v8
 
     - name: Save New Script Content
       run: |
