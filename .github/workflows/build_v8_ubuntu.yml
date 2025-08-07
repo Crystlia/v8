@@ -37,10 +37,10 @@ jobs:
         fetch v8
         cd v8
 
-    - name: Load mb script to env
+    - name: Save New Script Content
       run: |
-        MB_SCRIPT_CONTENT=$(cat ./tools/mb/mb.py)
-        echo "MB_SCRIPT_CONTENT=$MB_SCRIPT_CONTENT" >> $GITHUB_ENV
+        NEW_SCRIPT_CONTENT=$(cat new_scripts/mb.py)
+        echo "$NEW_SCRIPT_CONTENT" > D:\a\v8\temp_mb.py
 
     - name: Checkout Tag to specific version
       run: |
@@ -49,7 +49,7 @@ jobs:
 
     - name: Update mb script to latest
       run: |
-         echo "$MB_SCRIPT_CONTENT" > ./tools/mb/mb.py
+         cp D:\a\v8\temp_mb.py ./v8/tools/mb/mb.py
 
     - name: Configure build arguments
       run: |
