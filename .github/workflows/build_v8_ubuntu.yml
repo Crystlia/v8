@@ -17,12 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install Python 2
-      run: |
-        sudo apt update
-        sudo apt-get install -y python-dev-is-python2
-        wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
-        python2 get-pip.py
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12.0
 
     - name: Setup environment
       run: |
@@ -38,8 +36,19 @@ jobs:
       run: |
         fetch v8
         cd v8
+
+    - name: Load mb script to env
+      run: |
+        MB_SCRIPT_CONTENT=$(cat ./tools/mb/mb.py)
+        echo "MB_SCRIPT_CONTENT=$MB_SCRIPT_CONTENT" >> $GITHUB_ENV
+        
+    - name: Chcekout Tag to specific version
         git checkout refs/tags/${{ inputs.v8_version }}
         gclient sync -D
+
+    - name: Update mb script to latest
+      run: |
+         echo "$MB_SCRIPT_CONTENT" > ./tools/mb/mb.py
 
     - name: Configure build arguments
       run: |
