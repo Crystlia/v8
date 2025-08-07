@@ -43,6 +43,7 @@ jobs:
         echo "MB_SCRIPT_CONTENT=$MB_SCRIPT_CONTENT" >> $GITHUB_ENV
 
     - name: Checkout Tag to specific version
+      run: |
         git checkout refs/tags/${{ inputs.v8_version }}
         gclient sync -D
 
