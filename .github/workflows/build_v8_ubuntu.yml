@@ -41,8 +41,8 @@ jobs:
       run: |
         MB_SCRIPT_CONTENT=$(cat ./tools/mb/mb.py)
         echo "MB_SCRIPT_CONTENT=$MB_SCRIPT_CONTENT" >> $GITHUB_ENV
-        
-    - name: Chcekout Tag to specific version
+
+    - name: Checkout Tag to specific version
         git checkout refs/tags/${{ inputs.v8_version }}
         gclient sync -D
 
