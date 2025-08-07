@@ -39,7 +39,7 @@ jobs:
 
     - name: Save New Script Content
       run: |
-        NEW_SCRIPT_CONTENT=$(cat new_scripts/mb.py)
+        NEW_SCRIPT_CONTENT=$(cat ./tools/mb/mb.py)
         echo "$NEW_SCRIPT_CONTENT" > D:\a\v8\temp_mb.py
 
     - name: Checkout Tag to specific version
